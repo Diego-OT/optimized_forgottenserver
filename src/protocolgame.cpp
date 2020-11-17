@@ -4125,6 +4125,11 @@ void ProtocolGame::sendMagicEffect(const Position& pos, uint8_t type)
 	if (!canSee(pos)) {
 		return;
 	}
+	
+	if (!type) {
+		type = 11; // Avoid debbug if we set the effect name wrong in scripts, example: CONS_ME_TELEPORT (ye, I lost like 1h to discovery what was wrong due to missing "T")
+		std::cout << "Wrong value in sendMagicEffect" << std::endl;
+	}
 
 	#if CLIENT_VERSION >= 1203
 	playermsg.reset();
