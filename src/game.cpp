@@ -5643,6 +5643,7 @@ void Game::playerCyclopediaCharacterInfo(Player* player, uint32_t characterID, C
 
 				std::vector<RecentDeathEntry> entries;
 				entries.reserve(result->countResults());
+				bool isSameCause = false;
 				do {
 					std::string cause1 = result->getString("killed_by");
 					std::string cause2 = result->getString("mostdamage_by");
@@ -5659,18 +5660,22 @@ void Game::playerCyclopediaCharacterInfo(Player* player, uint32_t characterID, C
 						cause << cause1;
 					}
 
-					if (!cause2.empty()) {
-						if (!cause1.empty()) {
-							cause << " and ";
+					if (!cause2.empty() ) {
+						if (!cause1.empty() && cause1 == cause2) {
+						    isSameCause = true;                            
+						} else if (!cause1.empty() && cause1 != cause2) {
+						    cause << " and ";
 						}
 
-						const char& character = cause2.front();
-						if (character == 'a' || character == 'e' || character == 'i' || character == 'o' || character == 'u') {
+						if(!isSameCause) {
+						    const char& character = cause2.front();
+						    if (character == 'a' || character == 'e' || character == 'i' || character == 'o' || character == 'u') {
 							cause << " an ";
-						} else {
+						    } else {
 							cause << " a ";
+						    }
+						    cause << cause2;
 						}
-						cause << cause2;
 					}
 					cause << '.';
 					entries.emplace_back(std::move(static_cast<std::string&>(cause)), result->getNumber<uint32_t>("time"));
