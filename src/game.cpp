@@ -5674,7 +5674,7 @@ void Game::playerPassPartyLeadership(Player* player, uint32_t newLeaderId)
 void Game::playerLeaveParty(Player* player)
 {
 	Party* party = player->getParty();
-	if (!party || player->hasCondition(CONDITION_INFIGHT)) {
+	if (!party || (player->hasCondition(CONDITION_INFIGHT) && player->getZone() != ZONE_PROTECTION)) {
 		return;
 	}
 
